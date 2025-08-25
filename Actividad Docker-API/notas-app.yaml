@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notas-titulos
+data:
+  titulo-app1: "Notas: versión 1"
+  titulo-app2: "Notas: versión 2"
+  titulo-app3: "Notas: versión 3"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notas-app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notas
+      instancia: "1"
+  template:
+    metadata:
+      labels:
+        app: notas
+        instancia: "1"
+    spec:
+      containers:
+        - name: app
+          image: notas-api/notas:latest  
+          ports:
+            - containerPort: 5000
+          env:
+            - name: API_TITLE
+              valueFrom:
+                configMapKeyRef:
+                  name: notas-titulos
+                  key: titulo-app1
+            - name: NOTES_FILE
+              value: /data/notes.txt
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+      volumes:
+        - name: data-volume
+          emptyDir: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notas-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notas
+      instancia: "2"
+  template:
+    metadata:
+      labels:
+        app: notas
+        instancia: "2"
+    spec:
+      containers:
+        - name: app
+          image: notas-api/notas:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: API_TITLE
+              valueFrom:
+                configMapKeyRef:
+                  name: notas-titulos
+                  key: titulo-app2
+            - name: NOTES_FILE
+              value: /data/notes.txt
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+      volumes:
+        - name: data-volume
+          emptyDir: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notas-app3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notas
+      instancia: "3"
+  template:
+    metadata:
+      labels:
+        app: notas
+        instancia: "3"
+    spec:
+      containers:
+        - name: app
+          image: notas-api/notas:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: API_TITLE
+              valueFrom:
+                configMapKeyRef:
+                  name: notas-titulos
+                  key: titulo-app3
+            - name: NOTES_FILE
+              value: /data/notes.txt
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+      volumes:
+        - name: data-volume
+          emptyDir: {}
