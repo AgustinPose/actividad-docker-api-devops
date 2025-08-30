@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notas-live
+  namespace: notas-app
+spec:
+  selector:
+    app: notas
+    version: blue    # ⬅️ Conmutás entre green y blue acá
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP

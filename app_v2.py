@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import logging
 from pathlib import Path
 from flask import Flask, request, jsonify
 
@@ -8,6 +9,13 @@ app = Flask(__name__)
 
 NOTES_FILE = os.getenv("NOTES_FILE", "/data/notes.txt")
 API_TITLE = os.getenv("API_TITLE", "Notas API")
+
+# Setup de logging
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)
 
 Path(os.path.dirname(NOTES_FILE) or ".").mkdir(parents=True, exist_ok=True)
 Path(NOTES_FILE).touch(exist_ok=True)
@@ -19,6 +27,7 @@ def _append_note(text: str):
     entry = {"ts": int(time.time()), "note": text}
     with open(NOTES_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    logging.info(f"Nota agregada: {entry}")
     return entry
 
 def _read_notes():
@@ -36,7 +45,7 @@ def _read_notes():
 
 @app.get("/")
 def root():
-    return jsonify(status="ok", message=f"{API_TITLE} funcionando"), 200
+    raise RuntimeError("Exploto 😵")
 
 @app.post("/add/<path:note>")
 def add_with_path(note):
