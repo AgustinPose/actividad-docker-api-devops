@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'k8s/notas-api'
+        IMAGE_NAME = 'notas-api'
         IMAGE_TAG = 'v1'  // o 'v2'
     }
 
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Aplicar en Kubernetes') {
             steps {
-                bat "kubectl apply -f notas-app.yaml"
+                bat "kubectl apply -f k8s/notas-app.yaml"
             }
         }
     }
