@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'notas-api'
+        IMAGE_NAME = 'k8s/notas-api'
         IMAGE_TAG = 'v1'  // o 'v2'
     }
 
